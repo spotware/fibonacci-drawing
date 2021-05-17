@@ -1,0 +1,603 @@
+﻿using cAlgo.API;
+using cAlgo.Helpers;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+
+namespace cAlgo.Patterns
+{
+    public class FibonacciSpeedResistanceFanPattern : FanPatternBase
+    {
+        private ChartRectangle _rectangle;
+
+        private readonly Dictionary<double, ChartTrendLine> _horizontalTrendLines = new Dictionary<double, ChartTrendLine>();
+        private ChartTrendLine[] _verticalTrendLines;
+
+        private ChartTrendLine _extendedHorizontalLine;
+        private ChartTrendLine _extendedVerticalLine;
+
+        private readonly FibonacciSpeedResistanceFanSettings _settings;
+
+        public FibonacciSpeedResistanceFanPattern(PatternConfig config, FibonacciSpeedResistanceFanSettings settings) : base("Fibonacci Speed Resistance Fan", config, settings.SideFanSettings, settings.MainFanSettings)
+        {
+            _settings = settings;
+        }
+
+        protected override void OnPatternChartObjectsUpdated(long id, ChartObject updatedChartObject, ChartObject[] patternObjects)
+        {
+            base.OnPatternChartObjectsUpdated(id, updatedChartObject, patternObjects);
+
+            var rectangle = patternObjects.FirstOrDefault(iObject => iObject.ObjectType == ChartObjectType.Rectangle) as ChartRectangle;
+
+            if (rectangle == null) return;
+
+            var trendLines = patternObjects.Where(iObject => iObject.ObjectType == ChartObjectType.TrendLine).Cast<ChartTrendLine>();
+
+            var mainFan = trendLines.FirstOrDefault(iLine => iLine.Name.IndexOf("1x1", StringComparison.OrdinalIgnoreCase) > -1);
+
+            if (mainFan == null) return;
+
+            rectangle.Time1 = mainFan.GetStartTime();
+            rectangle.Time2 = mainFan.GetEndTime();
+
+            rectangle.Y1 = mainFan.GetTopPrice();
+            rectangle.Y2 = mainFan.GetBottomPrice();
+
+            var horizontalLines = trendLines.Where(iTrendLine => iTrendLine.Name.IndexOf("HorizontalLine", StringComparison.OrdinalIgnoreCase) > -1).ToDictionary(iLine => double.Parse(iLine.Name.Split('_').Last(), CultureInfo.InvariantCulture));
+
+            DrawOrUpdateHorizontalLines(rectangle, horizontalLines);
+
+            //var verticalLines = trendLines.Where(iTrendLine => iTrendLine.Name.LastIndexOf("VerticalLine", StringComparison.OrdinalIgnoreCase) > -1).ToArray();
+
+            //DrawOrUpdateVerticalLines(rectangle, verticalLines);
+
+            var extendedHorizontalLine = trendLines.FirstOrDefault(iTrendLine => iTrendLine.Name.IndexOf("HorizontalExtendedLine", StringComparison.OrdinalIgnoreCase) > -1);
+            var extendedVerticalLine = trendLines.FirstOrDefault(iTrendLine => iTrendLine.Name.IndexOf("VerticalExtendedLine", StringComparison.OrdinalIgnoreCase) > -1);
+
+            if (extendedHorizontalLine != null && extendedVerticalLine != null)
+            {
+                DrawOrUpdateExtendedSideLines(mainFan, ref extendedHorizontalLine, ref extendedVerticalLine);
+            }
+        }
+
+        protected override void OnDrawingStopped()
+        {
+            base.OnDrawingStopped();
+
+            _rectangle = null;
+
+            _extendedHorizontalLine = null;
+            _extendedVerticalLine = null;
+
+            _horizontalTrendLines.Clear();
+
+            _verticalTrendLines = null;
+        }
+
+        protected override void OnMouseUp(ChartMouseEventArgs obj)
+        {
+            if (_rectangle == null)
+            {
+                var name = GetObjectName("Rectangle");
+
+                _rectangle = Chart.DrawRectangle(name, obj.TimeValue, obj.YValue, obj.TimeValue, obj.YValue, _settings.RectangleColor, _settings.RectangleThickness, _settings.RectangleStyle);
+
+                _rectangle.IsInteractive = true;
+                _rectangle.IsLocked = true;
+            }
+
+            base.OnMouseUp(obj);
+        }
+
+        protected override void OnMouseMove(ChartMouseEventArgs obj)
+        {
+            if (_rectangle != null)
+            {
+                _rectangle.Time2 = obj.TimeValue;
+                _rectangle.Y2 = obj.YValue;
+
+                DrawOrUpdateHorizontalLines(MainFanLine, _horizontalTrendLines);
+
+                _verticalTrendLines = new ChartTrendLine[_settings.SideFanSettings.Where(iSideFan => iSideFan.Percent > 0).Count()];
+
+                //DrawOrUpdateVerticalLines(_rectangle, _verticalTrendLines);
+
+                DrawOrUpdateExtendedSideLines(MainFanLine, ref _extendedHorizontalLine, ref _extendedVerticalLine);
+            }
+
+            base.OnMouseMove(obj);
+        }
+
+        protected override void UpdateSideFans(ChartTrendLine mainFan, Dictionary<string, ChartTrendLine> sideFans)
+        {
+            var startBarIndex = mainFan.GetStartBarIndex(Chart.Bars, Chart.Symbol);
+            var endBarIndex = mainFan.GetEndBarIndex(Chart.Bars, Chart.Symbol);
+
+            var barsNumber = mainFan.GetBarsNumber(Chart.Bars, Chart.Symbol);
+
+            var mainFanPriceDelta = Math.Abs(mainFan.Y2 - mainFan.Y1);
+
+            for (var iFan = 0; iFan < SideFanSettings.Length; iFan++)
+            {
+                var fanSettings = SideFanSettings[iFan];
+
+                double y2;
+                DateTime time2;
+
+                if (fanSettings.Percent < 0)
+                {
+                    var yAmount = mainFanPriceDelta * Math.Abs(fanSettings.Percent);
+
+                    y2 = mainFan.Y2 > mainFan.Y1 ? mainFan.Y2 - yAmount : mainFan.Y2 + yAmount;
+
+                    time2 = mainFan.Time2;
+                }
+                else
+                {
+                    y2 = mainFan.Y2;
+
+                    var barsPercent = barsNumber * fanSettings.Percent;
+
+                    var barIndex = mainFan.Time2 > mainFan.Time1 ? endBarIndex - barsPercent : startBarIndex + barsPercent;
+
+                    time2 = Chart.Bars.GetOpenTime(barIndex, Chart.Symbol);
+                }
+
+                ChartTrendLine fanLine;
+
+                if (!sideFans.TryGetValue(fanSettings.Name, out fanLine)) continue;
+
+                fanLine.Time1 = mainFan.Time1;
+                fanLine.Time2 = time2;
+
+                fanLine.Y1 = mainFan.Y1;
+                fanLine.Y2 = y2;
+            }
+        }
+
+        protected override void DrawSideFans(ChartTrendLine mainFan)
+        {
+            var startBarIndex = mainFan.GetStartBarIndex(Chart.Bars, Chart.Symbol);
+            var endBarIndex = mainFan.GetEndBarIndex(Chart.Bars, Chart.Symbol);
+
+            var barsNumber = mainFan.GetBarsNumber(Chart.Bars, Chart.Symbol);
+
+            var mainFanPriceDelta = Math.Abs(mainFan.Y2 - mainFan.Y1);
+
+            for (var iFan = 0; iFan < SideFanSettings.Length; iFan++)
+            {
+                var fanSettings = SideFanSettings[iFan];
+
+                double y2;
+                DateTime time2;
+
+                if (fanSettings.Percent < 0)
+                {
+                    var yAmount = mainFanPriceDelta * Math.Abs(fanSettings.Percent);
+
+                    y2 = mainFan.Y2 > mainFan.Y1 ? mainFan.Y2 - yAmount : mainFan.Y2 + yAmount;
+
+                    time2 = mainFan.Time2;
+                }
+                else
+                {
+                    y2 = mainFan.Y2;
+
+                    var barsPercent = barsNumber * fanSettings.Percent;
+
+                    var barIndex = mainFan.Time2 > mainFan.Time1 ? endBarIndex - barsPercent : startBarIndex + barsPercent;
+
+                    time2 = Chart.Bars.GetOpenTime(barIndex, Chart.Symbol);
+                }
+
+                var objectName = GetObjectName(fanSettings.Name);
+
+                var trendLine = Chart.DrawTrendLine(objectName, mainFan.Time1, mainFan.Y1, time2, y2, fanSettings.Color, fanSettings.Thickness, fanSettings.Style);
+
+                trendLine.IsInteractive = true;
+                trendLine.IsLocked = true;
+                trendLine.ExtendToInfinity = true;
+
+                SideFanLines[fanSettings.Name] = trendLine;
+            }
+        }
+
+        private void DrawOrUpdateHorizontalLines(ChartTrendLine mainFan, Dictionary<double, ChartTrendLine> horizontalLines)
+        {
+            var startTime = mainFan.GetStartTime();
+            var endTime = mainFan.GetEndTime();
+
+            var verticalDelta = mainFan.GetPriceDelta();
+
+            for (int i = 0; i < _settings.SideFanSettings.Length; i++)
+            {
+                var fanSettings = _settings.SideFanSettings[i];
+
+                if (fanSettings.Percent > 0) continue;
+
+                var absolutePercent = Math.Abs(fanSettings.Percent);
+
+                var lineLevel = absolutePercent * verticalDelta;
+
+                var level = mainFan.Y2 > mainFan.Y1 ? mainFan.Y2 - lineLevel : mainFan.Y2 + lineLevel;
+
+                ChartTrendLine line;
+
+                if (horizontalLines.TryGetValue(absolutePercent, out line))
+                {
+                    line.Time1 = startTime;
+                    line.Time2 = endTime;
+
+                    line.Y1 = level;
+                    line.Y2 = level;
+                }
+                else
+                {
+                    var objectName = GetObjectName(string.Format("HorizontalLine_{0}", absolutePercent.ToString(CultureInfo.InvariantCulture)));
+
+                    line = Chart.DrawTrendLine(objectName, startTime, level, endTime, level, _settings.PriceLevelsColor, _settings.PriceLevelsThickness, _settings.PriceLevelsStyle);
+
+                    line.IsInteractive = true;
+                    line.IsLocked = true;
+
+                    horizontalLines.Add(absolutePercent, line);
+                }
+            }
+        }
+
+        private void DrawOrUpdateVerticalLines(ChartRectangle rectangle, ChartTrendLine[] verticalLines)
+        {
+            var startBarIndex = rectangle.GetStartBarIndex(Chart.Bars, Chart.Symbol);
+
+            var barsNumber = rectangle.GetBarsNumber(Chart.Bars, Chart.Symbol);
+
+            var lineLevels = _settings.SideFanSettings.Where(iSideFan => iSideFan.Percent > 0).Select(iSideFan => iSideFan.Percent * barsNumber).ToArray();
+
+            var rectangleEndTime = rectangle.GetEndTime();
+
+            for (int i = 0; i < lineLevels.Length; i++)
+            {
+                var barIndex = startBarIndex + lineLevels[i];
+
+                var time = Chart.Bars.GetOpenTime(barIndex, Chart.Symbol);
+
+                if (time > rectangleEndTime)
+                {
+                    time = rectangleEndTime;
+                }
+
+                var verticalLine = verticalLines[i];
+
+                if (verticalLine == null)
+                {
+                    var objectName = GetObjectName(string.Format("VerticalLine{0}", i + 1));
+
+                    verticalLines[i] = Chart.DrawTrendLine(objectName, time, rectangle.Y1, time, rectangle.Y2, _settings.TimeLevelsColor, _settings.TimeLevelsThickness, _settings.TimeLevelsStyle);
+
+                    verticalLines[i].IsInteractive = true;
+                    verticalLines[i].IsLocked = true;
+                }
+                else
+                {
+                    verticalLine.Time1 = time;
+                    verticalLine.Time2 = time;
+
+                    verticalLine.Y1 = rectangle.Y1;
+                    verticalLine.Y2 = rectangle.Y2;
+                }
+            }
+        }
+
+        private void DrawOrUpdateExtendedSideLines(ChartTrendLine mainFanLine, ref ChartTrendLine horizontalLine, ref ChartTrendLine verticalLine)
+        {
+            if (mainFanLine == null) return;
+
+            var time1 = mainFanLine.Time1;
+            var time2 = mainFanLine.Time2;
+
+            var y1 = mainFanLine.Y1;
+            var y2 = mainFanLine.Y2;
+
+            var timeDelta = mainFanLine.GetTimeDelta();
+
+            var horizontalLineTime2 = time2 > time1 ? time2.Add(timeDelta) : time2.Add(-timeDelta);
+
+            if (horizontalLine == null)
+            {
+                var name = GetObjectName("HorizontalExtendedLine");
+
+                horizontalLine = Chart.DrawTrendLine(name, time1, y1, horizontalLineTime2, y1, _settings.ExtendedLinesColor, _settings.ExtendedLinesThickness, _settings.ExtendedLinesStyle);
+
+                horizontalLine.IsInteractive = true;
+                horizontalLine.IsLocked = true;
+                horizontalLine.ExtendToInfinity = true;
+            }
+            else
+            {
+                horizontalLine.Time1 = time1;
+                horizontalLine.Time2 = horizontalLineTime2;
+                horizontalLine.Y1 = y1;
+                horizontalLine.Y2 = y1;
+            }
+
+            var priceDelta = mainFanLine.GetPriceDelta();
+
+            var verticalLineY2 = y2 > y1 ? y2 + priceDelta : y2 - priceDelta;
+
+            if (verticalLine == null)
+            {
+                var name = GetObjectName("VerticalExtendedLine");
+
+                verticalLine = Chart.DrawTrendLine(name, time1, y1, time1, verticalLineY2, _settings.ExtendedLinesColor, _settings.ExtendedLinesThickness, _settings.ExtendedLinesStyle);
+
+                verticalLine.IsInteractive = true;
+                verticalLine.IsLocked = true;
+                verticalLine.ExtendToInfinity = true;
+            }
+            else
+            {
+                verticalLine.Time1 = time1;
+                verticalLine.Time2 = time1;
+                verticalLine.Y1 = y1;
+                verticalLine.Y2 = verticalLineY2;
+            }
+        }
+
+        protected override void DrawLabels()
+        {
+            if (MainFanLine == null || _horizontalTrendLines == null || _verticalTrendLines == null) return;
+
+            //DrawLabels(MainFanLine, _horizontalTrendLines, _verticalTrendLines, Id);
+        }
+
+        private void DrawLabels(ChartTrendLine mainFanLine, Dictionary<double, ChartTrendLine> horizontalLines, ChartTrendLine[] verticalLines, long id)
+        {
+            var timeDistance = -TimeSpan.FromHours(Chart.Bars.GetTimeDiff().TotalHours * 2);
+
+            DrawLabelText("1", mainFanLine.Time1, mainFanLine.Y1, id, objectNameKey: "1.0", fontSize: 10, color: _settings.MainFanSettings.Color);
+            DrawLabelText("0", mainFanLine.Time1, mainFanLine.Y2, id, objectNameKey: "0.0", fontSize: 10, color: _settings.MainFanSettings.Color);
+
+            DrawLabelText("1", mainFanLine.Time1.Add(timeDistance), mainFanLine.Y1, id, objectNameKey: "1.1", fontSize: 10, color: _settings.MainFanSettings.Color);
+            DrawLabelText("0", mainFanLine.Time2.Add(timeDistance), mainFanLine.Y1, id, objectNameKey: "0.1", fontSize: 10, color: _settings.MainFanSettings.Color);
+
+            DrawLabelText("1", mainFanLine.Time2, mainFanLine.Y1, id, objectNameKey: "1.2", fontSize: 10, color: _settings.MainFanSettings.Color);
+            DrawLabelText("0", mainFanLine.Time2, mainFanLine.Y2, id, objectNameKey: "0.2", fontSize: 10, color: _settings.MainFanSettings.Color);
+
+            DrawLabelText("1", mainFanLine.Time1.Add(timeDistance), mainFanLine.Y2, id, objectNameKey: "1.3", fontSize: 10, color: _settings.MainFanSettings.Color);
+            DrawLabelText("0", mainFanLine.Time2.Add(timeDistance), mainFanLine.Y2, id, objectNameKey: "0.3", fontSize: 10, color: _settings.MainFanSettings.Color);
+
+            foreach (var horizontalLine in horizontalLines)
+            {
+                var fanSettings = _settings.SideFanSettings.FirstOrDefault(iFanSettings => iFanSettings.Percent == -horizontalLine.Key);
+
+                if (fanSettings == null) continue;
+
+                var text = horizontalLine.Key.ToString();
+                var color = fanSettings.Color;
+
+                var firstLabelObjectNameKey = string.Format("Horizontal_0_{0}", horizontalLine.Key);
+                var secondLabelObjectNameKey = string.Format("Horizontal_1_{0}", horizontalLine.Key);
+
+                DrawLabelText(text, horizontalLine.Value.Time1, horizontalLine.Value.Y1, id, objectNameKey: firstLabelObjectNameKey, fontSize: 10, color: color);
+                DrawLabelText(text, horizontalLine.Value.Time2, horizontalLine.Value.Y2, id, objectNameKey: secondLabelObjectNameKey, fontSize: 10, color: color);
+            }
+
+            var verticalFanSettings = _settings.SideFanSettings.Where(iFan => iFan.Percent < 0).OrderBy(iFan => iFan.Percent).ToArray();
+
+            for (var i = 0; i < verticalLines.Length; i++)
+            {
+                var verticalLine = verticalLines[i];
+
+                var fanSettings = verticalFanSettings[mainFanLine.Time2 > mainFanLine.Time1 ? i : verticalLines.Length - i - 1];
+
+                var text = Math.Abs(fanSettings.Percent).ToString();
+                var color = fanSettings.Color;
+
+                switch (i)
+                {
+                    case 0:
+
+                        DrawLabelText(text, verticalLine.Time1, verticalLine.Y1, id, objectNameKey: "Vertical1.0", fontSize: 10, color: color);
+                        DrawLabelText(text, verticalLine.Time2, verticalLine.Y2, id, objectNameKey: "Vertical1.1", fontSize: 10, color: color);
+                        break;
+
+                    case 1:
+
+                        DrawLabelText(text, verticalLine.Time1, verticalLine.Y1, id, objectNameKey: "Vertical2.0", fontSize: 10, color: color);
+                        DrawLabelText(text, verticalLine.Time2, verticalLine.Y2, id, objectNameKey: "Vertical2.1", fontSize: 10, color: color);
+                        break;
+
+                    case 2:
+
+                        DrawLabelText(text, verticalLine.Time1, verticalLine.Y1, id, objectNameKey: "Vertical3.0", fontSize: 10, color: color);
+                        DrawLabelText(text, verticalLine.Time2, verticalLine.Y2, id, objectNameKey: "Vertical3.1", fontSize: 10, color: color);
+                        break;
+
+                    case 3:
+
+                        DrawLabelText(text, verticalLine.Time1, verticalLine.Y1, id, objectNameKey: "Vertical4.0", fontSize: 10, color: color);
+                        DrawLabelText(text, verticalLine.Time2, verticalLine.Y2, id, objectNameKey: "Vertical4.1", fontSize: 10, color: color);
+                        break;
+
+                    case 4:
+
+                        DrawLabelText(text, verticalLine.Time1, verticalLine.Y1, id, objectNameKey: "Vertical5.0", fontSize: 10, color: color);
+                        DrawLabelText(text, verticalLine.Time2, verticalLine.Y2, id, objectNameKey: "Vertical5.1", fontSize: 10, color: color);
+                        break;
+                }
+            }
+        }
+
+        protected override void UpdateLabels(long id, ChartObject chartObject, ChartText[] labels, ChartObject[] patternObjects)
+        {
+            var trendLines = patternObjects.Where(iObject => iObject.ObjectType == ChartObjectType.TrendLine).Cast<ChartTrendLine>();
+
+            var horizontalLines = trendLines.Where(iTrendLine => iTrendLine.Name.IndexOf("HorizontalLine", StringComparison.OrdinalIgnoreCase) > -1).ToDictionary(iLine => double.Parse(iLine.Name.Split('_').Last(), CultureInfo.InvariantCulture));
+
+            var verticalLines = trendLines.Where(iTrendLine => iTrendLine.Name.IndexOf("VerticalLine", StringComparison.OrdinalIgnoreCase) > -1).ToArray();
+
+            var mainFan = trendLines.FirstOrDefault(iLine => iLine.Name.IndexOf("1x1", StringComparison.OrdinalIgnoreCase) > -1);
+
+            if (horizontalLines == null || verticalLines == null || mainFan == null) return;
+
+            if (labels.Length == 0)
+            {
+                DrawLabels(mainFan, horizontalLines, verticalLines, id);
+
+                return;
+            }
+
+            foreach (var horizontalLine in horizontalLines)
+            {
+                var firstLabelObjectNameKey = string.Format("Horizontal_0_{0}", horizontalLine.Key);
+
+                var firstLabel = labels.FirstOrDefault(iLabel => iLabel.Name.LastIndexOf(firstLabelObjectNameKey, StringComparison.OrdinalIgnoreCase) > -1);
+
+                if (firstLabel == null) continue;
+
+                firstLabel.Time = horizontalLine.Value.Time1;
+                firstLabel.Y = horizontalLine.Value.Y1;
+
+                var secondLabelObjectNameKey = string.Format("Horizontal_1_{0}", horizontalLine.Key);
+
+                var secondLabel = labels.FirstOrDefault(iLabel => iLabel.Name.LastIndexOf(secondLabelObjectNameKey, StringComparison.OrdinalIgnoreCase) > -1);
+
+                if (secondLabel == null) continue;
+
+                secondLabel.Time = horizontalLine.Value.Time2;
+                secondLabel.Y = horizontalLine.Value.Y2;
+            }
+
+            ChartTrendLine chartTrendLine;
+
+            foreach (var label in labels)
+            {
+                var labelKey = label.Name.Split('_').Last();
+
+                switch (labelKey)
+                {
+                    case "Vertical1.0":
+                        chartTrendLine = verticalLines.First(iLine => iLine.Name.EndsWith("VerticalLine1", StringComparison.OrdinalIgnoreCase));
+
+                        label.Time = chartTrendLine.Time1;
+                        label.Y = chartTrendLine.Y1;
+                        break;
+
+                    case "Vertical1.1":
+                        chartTrendLine = verticalLines.First(iLine => iLine.Name.EndsWith("VerticalLine1", StringComparison.OrdinalIgnoreCase));
+
+                        label.Time = chartTrendLine.Time2;
+                        label.Y = chartTrendLine.Y2;
+                        break;
+
+                    case "Vertical2.0":
+                        chartTrendLine = verticalLines.First(iLine => iLine.Name.EndsWith("VerticalLine2", StringComparison.OrdinalIgnoreCase));
+
+                        label.Time = chartTrendLine.Time1;
+                        label.Y = chartTrendLine.Y1;
+                        break;
+
+                    case "Vertical2.1":
+                        chartTrendLine = verticalLines.First(iLine => iLine.Name.EndsWith("VerticalLine2", StringComparison.OrdinalIgnoreCase));
+
+                        label.Time = chartTrendLine.Time2;
+                        label.Y = chartTrendLine.Y2;
+                        break;
+
+                    case "Vertical3.0":
+                        chartTrendLine = verticalLines.First(iLine => iLine.Name.EndsWith("VerticalLine3", StringComparison.OrdinalIgnoreCase));
+
+                        label.Time = chartTrendLine.Time1;
+                        label.Y = chartTrendLine.Y1;
+                        break;
+
+                    case "Vertical3.1":
+                        chartTrendLine = verticalLines.First(iLine => iLine.Name.EndsWith("VerticalLine3", StringComparison.OrdinalIgnoreCase));
+
+                        label.Time = chartTrendLine.Time2;
+                        label.Y = chartTrendLine.Y2;
+                        break;
+
+                    case "Vertical4.0":
+                        chartTrendLine = verticalLines.First(iLine => iLine.Name.EndsWith("VerticalLine4", StringComparison.OrdinalIgnoreCase));
+
+                        label.Time = chartTrendLine.Time1;
+                        label.Y = chartTrendLine.Y1;
+                        break;
+
+                    case "Vertical4.1":
+                        chartTrendLine = verticalLines.First(iLine => iLine.Name.EndsWith("VerticalLine4", StringComparison.OrdinalIgnoreCase));
+
+                        label.Time = chartTrendLine.Time2;
+                        label.Y = chartTrendLine.Y2;
+                        break;
+
+                    case "Vertical5.0":
+                        chartTrendLine = verticalLines.First(iLine => iLine.Name.EndsWith("VerticalLine5", StringComparison.OrdinalIgnoreCase));
+
+                        label.Time = chartTrendLine.Time1;
+                        label.Y = chartTrendLine.Y1;
+                        break;
+
+                    case "Vertical5.1":
+                        chartTrendLine = verticalLines.First(iLine => iLine.Name.EndsWith("VerticalLine5", StringComparison.OrdinalIgnoreCase));
+
+                        label.Time = chartTrendLine.Time2;
+                        label.Y = chartTrendLine.Y2;
+                        break;
+
+                    default:
+                        {
+                            var timeDistance = -TimeSpan.FromHours(Chart.Bars.GetTimeDiff().TotalHours * 2);
+
+                            switch (labelKey)
+                            {
+                                case "1.0":
+                                    label.Time = mainFan.Time1;
+                                    label.Y = mainFan.Y1;
+                                    break;
+
+                                case "0.0":
+                                    label.Time = mainFan.Time1;
+                                    label.Y = mainFan.Y2;
+                                    break;
+
+                                case "1.1":
+                                    label.Time = mainFan.Time1.Add(timeDistance);
+                                    label.Y = mainFan.Y1;
+                                    break;
+
+                                case "0.1":
+                                    label.Time = mainFan.Time2.Add(timeDistance);
+                                    label.Y = mainFan.Y1;
+                                    break;
+
+                                case "1.2":
+                                    label.Time = mainFan.Time2;
+                                    label.Y = mainFan.Y1;
+                                    break;
+
+                                case "0.2":
+                                    label.Time = mainFan.Time2;
+                                    label.Y = mainFan.Y2;
+                                    break;
+
+                                case "1.3":
+                                    label.Time = mainFan.Time1.Add(timeDistance);
+                                    label.Y = mainFan.Y2;
+                                    break;
+
+                                case "0.3":
+                                    label.Time = mainFan.Time2.Add(timeDistance);
+                                    label.Y = mainFan.Y2;
+                                    break;
+                            }
+
+                            break;
+                        }
+                }
+            }
+        }
+    }
+}

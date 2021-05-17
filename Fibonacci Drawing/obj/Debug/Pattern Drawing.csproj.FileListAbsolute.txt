@@ -1,0 +1,11 @@
+C:\Users\afhacker\Documents\cAlgo\Sources\Indicators\Pattern Drawing\Pattern Drawing\bin\Debug\Pattern Drawing.dll
+C:\Users\afhacker\Documents\cAlgo\Sources\Indicators\Pattern Drawing\Pattern Drawing\bin\Debug\Pattern Drawing.pdb
+C:\Users\afhacker\Documents\cAlgo\Sources\Indicators\Pattern Drawing\Pattern Drawing\bin\Debug\cAlgo.API.dll
+C:\Users\afhacker\Documents\cAlgo\Sources\Indicators\Pattern Drawing\Pattern Drawing\bin\Debug\cAlgo.API.xml
+C:\Users\afhacker\Documents\cAlgo\Sources\Indicators\Pattern Drawing\Pattern Drawing\obj\Debug\Pattern Drawing.csprojAssemblyReference.cache
+C:\Users\afhacker\Documents\cAlgo\Sources\Indicators\Pattern Drawing\Pattern Drawing\obj\Debug\cAlgo.Properties.Resources.resources
+C:\Users\afhacker\Documents\cAlgo\Sources\Indicators\Pattern Drawing\Pattern Drawing\obj\Debug\Pattern Drawing.csproj.GenerateResource.cache
+C:\Users\afhacker\Documents\cAlgo\Sources\Indicators\Pattern Drawing\Pattern Drawing\obj\Debug\Pattern Drawing.csproj.CoreCompileInputs.cache
+C:\Users\afhacker\Documents\cAlgo\Sources\Indicators\Pattern Drawing\Pattern Drawing\obj\Debug\Pattern Drawing.csproj.CopyComplete
+C:\Users\afhacker\Documents\cAlgo\Sources\Indicators\Pattern Drawing\Pattern Drawing\obj\Debug\Pattern Drawing.dll
+C:\Users\afhacker\Documents\cAlgo\Sources\Indicators\Pattern Drawing\Pattern Drawing\obj\Debug\Pattern Drawing.pdb

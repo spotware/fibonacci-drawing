@@ -1,0 +1,162 @@
+﻿using cAlgo.API;
+using System;
+using System.Linq;
+
+namespace cAlgo.Patterns
+{
+    public class GannBoxPattern : PatternBase
+    {
+        private ChartRectangle _rectangle;
+
+        private ChartTrendLine[] _horizontalTrendLines;
+        private ChartTrendLine[] _verticalTrendLines;
+
+        public GannBoxPattern(PatternConfig config) : base("Gann Box", config)
+        {
+        }
+
+        protected override void OnPatternChartObjectsUpdated(long id, ChartObject updatedChartObject, ChartObject[] patternObjects)
+        {
+            var otherTriangle = updatedChartObject as ChartTriangle;
+
+            if (otherTriangle == null) return;
+
+            var chartObjects = Chart.Objects.ToArray();
+
+            var objectNameId = string.Format("{0}_{1}", ObjectName, id);
+
+            foreach (var chartObject in chartObjects)
+            {
+                if (chartObject == updatedChartObject
+                    || chartObject.ObjectType != ChartObjectType.Triangle
+                    || !chartObject.Name.StartsWith(objectNameId, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                var triangle = chartObject as ChartTriangle;
+
+                if ((triangle.Name.EndsWith("Left", StringComparison.InvariantCultureIgnoreCase)
+                    && otherTriangle.Name.EndsWith("Head", StringComparison.InvariantCultureIgnoreCase))
+                    || (triangle.Name.EndsWith("Head", StringComparison.InvariantCultureIgnoreCase)
+                    && otherTriangle.Name.EndsWith("Right", StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    triangle.Time3 = otherTriangle.Time1;
+                    triangle.Y3 = otherTriangle.Y1;
+                }
+                else if ((triangle.Name.EndsWith("Head", StringComparison.InvariantCultureIgnoreCase)
+                    && otherTriangle.Name.EndsWith("Left", StringComparison.InvariantCultureIgnoreCase))
+                    || (triangle.Name.EndsWith("Right", StringComparison.InvariantCultureIgnoreCase)
+                    && otherTriangle.Name.EndsWith("Head", StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    triangle.Time1 = otherTriangle.Time3;
+                    triangle.Y1 = otherTriangle.Y3;
+                }
+            }
+        }
+
+        protected override void OnDrawingStopped()
+        {
+            _rectangle = null;
+            _horizontalTrendLines = null;
+            _verticalTrendLines = null;
+        }
+
+        protected override void OnMouseUp(ChartMouseEventArgs obj)
+        {
+            if (MouseUpNumber == 2)
+            {
+                FinishDrawing();
+
+                return;
+            }
+
+            if (_rectangle == null)
+            {
+                var name = GetObjectName("Rectangle");
+
+                _rectangle = Chart.DrawRectangle(name, obj.TimeValue, obj.YValue, obj.TimeValue, obj.YValue, Color);
+
+                _rectangle.IsInteractive = true;
+
+                DrawHorizontalLines(_rectangle);
+            }
+        }
+
+        private void DrawHorizontalLines(ChartRectangle rectangle)
+        {
+            _horizontalTrendLines = new ChartTrendLine[5];
+
+            var diff = Math.Abs(rectangle.Y2 - rectangle.Y1);
+
+            var lineLevels = new double[5];
+
+            if (rectangle.Y2 > rectangle.Y1)
+            {
+                lineLevels[0] = rectangle.Y1 + (diff * 0.25);
+                lineLevels[1] = rectangle.Y1 + (diff * 0.382);
+                lineLevels[2] = rectangle.Y1 + (diff * 0.5);
+                lineLevels[3] = rectangle.Y1 + (diff * 0.618);
+                lineLevels[4] = rectangle.Y1 + (diff * 0.75);
+            }
+            else
+            {
+                lineLevels[0] = rectangle.Y1 + (diff * 0.25);
+                lineLevels[1] = rectangle.Y1 + (diff * 0.382);
+                lineLevels[2] = rectangle.Y1 + (diff * 0.5);
+                lineLevels[3] = rectangle.Y1 + (diff * 0.618);
+                lineLevels[4] = rectangle.Y1 + (diff * 0.75);
+            }
+        }
+
+        protected override void OnMouseMove(ChartMouseEventArgs obj)
+        {
+            if (MouseUpNumber > 1 || _rectangle == null) return;
+
+            _rectangle.Time2 = obj.TimeValue;
+            _rectangle.Y2 = obj.YValue;
+        }
+
+        protected override void DrawLabels()
+        {
+            if (_rectangle == null || _horizontalTrendLines == null || _verticalTrendLines == null) return;
+
+            DrawLabels(_rectangle, _horizontalTrendLines, _verticalTrendLines, Id);
+        }
+
+        private void DrawLabels(ChartRectangle rectangle, ChartTrendLine[] horizontalTrendLines, ChartTrendLine[] verticalTrendLines, long id)
+        {
+            //DrawLabelText("Left", leftTriangle.Time2, leftTriangle.Y2, id);
+            //DrawLabelText("Head", headTriangle.Time2, headTriangle.Y2, id);
+            //DrawLabelText("Right", rightTriangle.Time2, rightTriangle.Y2, id);
+        }
+
+        protected override void UpdateLabels(long id, ChartObject chartObject, ChartText[] labels, ChartObject[] patternObjects)
+        {
+            var rectangle = patternObjects.FirstOrDefault(iObject => iObject is ChartRectangle) as ChartRectangle;
+
+            var horizontalLines = patternObjects.Where(iObject => iObject is ChartTrendLine && iObject.Name.EndsWith("Horizontal", StringComparison.OrdinalIgnoreCase)).Cast<ChartTrendLine>().ToArray();
+            var verticalLines = patternObjects.Where(iObject => iObject is ChartTrendLine && iObject.Name.EndsWith("Vertical", StringComparison.OrdinalIgnoreCase)).Cast<ChartTrendLine>().ToArray();
+
+            if (rectangle == null || horizontalLines == null || verticalLines == null) return;
+
+            if (labels.Length == 0)
+            {
+                DrawLabels(rectangle, horizontalLines, verticalLines, id);
+
+                return;
+            }
+
+            foreach (var label in labels)
+            {
+                //var labelTriangle = triangles.FirstOrDefault(iTriangle => iTriangle.Name.EndsWith(label.Text,
+                //    StringComparison.OrdinalIgnoreCase));
+
+                //if (labelTriangle == null) continue;
+
+                //label.Time = labelTriangle.Time2;
+                //label.Y = labelTriangle.Y2;
+            }
+        }
+    }
+}

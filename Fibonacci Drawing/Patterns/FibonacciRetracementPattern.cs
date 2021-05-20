@@ -87,35 +87,29 @@ namespace cAlgo.Patterns
                     continue;
                 }
 
-                if (level.IsFilled)
-                {
-                    ChartRectangle levelRectangle;
+                ChartRectangle levelRectangle;
 
-                    if (levelRectangles.TryGetValue(level.Percent, out levelRectangle))
+                if (levelRectangles.TryGetValue(level.Percent, out levelRectangle))
+                {
+                    if (levelLine.Value == updatedChartObject)
                     {
-                        if (levelLine.Value == updatedChartObject)
-                        {
-                            levelRectangle.Color = Color.FromArgb(level.FillColor.A, levelLine.Value.Color);
-                        }
-                        else if (levelRectangle == updatedChartObject)
-                        {
-                            levelLine.Value.Color = Color.FromArgb(level.LineColor.A, levelRectangle.Color);
-                        }
+                        levelRectangle.Color = Color.FromArgb(level.FillColor.A, levelLine.Value.Color);
+                    }
+                    else if (levelRectangle == updatedChartObject)
+                    {
+                        levelLine.Value.Color = Color.FromArgb(level.LineColor.A, levelRectangle.Color);
                     }
                 }
 
-                if (previousLevel.IsFilled)
-                {
-                    ChartRectangle previousLevelRectangle;
+                ChartRectangle previousLevelRectangle;
 
-                    if (!levelRectangles.TryGetValue(previousLevel.Percent, out previousLevelRectangle)) continue;
+                if (!levelRectangles.TryGetValue(previousLevel.Percent, out previousLevelRectangle)) continue;
 
-                    previousLevelRectangle.Time1 = startTime;
-                    previousLevelRectangle.Time2 = endTime;
+                previousLevelRectangle.Time1 = startTime;
+                previousLevelRectangle.Time2 = endTime;
 
-                    previousLevelRectangle.Y1 = previousLevelPrice;
-                    previousLevelRectangle.Y2 = price;
-                }
+                previousLevelRectangle.Y1 = previousLevelPrice;
+                previousLevelRectangle.Y2 = price;
 
                 previousLevelPrice = price;
                 previousLevel = level;
@@ -195,17 +189,14 @@ namespace cAlgo.Patterns
                     continue;
                 }
 
-                if (level.IsFilled)
-                {
-                    var levelRectangleName = GetObjectName(string.Format("LevelRectangle_{0}", level.Percent));
+                var levelRectangleName = GetObjectName(string.Format("LevelRectangle_{0}", level.Percent));
 
-                    var rectangle = Chart.DrawRectangle(levelRectangleName, startTime, previousLevelPrice, endTime, price, level.FillColor, 0);
+                var rectangle = Chart.DrawRectangle(levelRectangleName, startTime, previousLevelPrice, endTime, price, level.FillColor, 0);
 
-                    rectangle.IsFilled = level.IsFilled;
+                rectangle.IsFilled = level.IsFilled;
 
-                    rectangle.IsInteractive = true;
-                    rectangle.IsLocked = true;
-                }
+                rectangle.IsInteractive = true;
+                rectangle.IsLocked = true;
 
                 previousLevelPrice = price;
                 previousLevel = level;

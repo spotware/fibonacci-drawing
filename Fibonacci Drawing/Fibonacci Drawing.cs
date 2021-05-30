@@ -125,6 +125,9 @@ namespace cAlgo
         [Parameter("1st Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Retracement")]
         public LineStyle FirstFibonacciRetracementStyle { get; set; }
 
+        [Parameter("1st Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Retracement")]
+        public bool FirstFibonacciRetracementExtendToInfinity { get; set; }
+
         [Parameter("Show 2nd Level", DefaultValue = true, Group = "Fibonacci Retracement")]
         public bool ShowSecondFibonacciRetracement { get; set; }
 
@@ -145,6 +148,9 @@ namespace cAlgo
 
         [Parameter("2nd Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Retracement")]
         public LineStyle SecondFibonacciRetracementStyle { get; set; }
+
+        [Parameter("2nd Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Retracement")]
+        public bool SecondFibonacciRetracementExtendToInfinity { get; set; }
 
         [Parameter("Show 3rd Level", DefaultValue = true, Group = "Fibonacci Retracement")]
         public bool ShowThirdFibonacciRetracement { get; set; }
@@ -167,6 +173,9 @@ namespace cAlgo
         [Parameter("3rd Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Retracement")]
         public LineStyle ThirdFibonacciRetracementStyle { get; set; }
 
+        [Parameter("3rd Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Retracement")]
+        public bool ThirdFibonacciRetracementExtendToInfinity { get; set; }
+
         [Parameter("Show 4th Level", DefaultValue = true, Group = "Fibonacci Retracement")]
         public bool ShowFourthFibonacciRetracement { get; set; }
 
@@ -187,6 +196,9 @@ namespace cAlgo
 
         [Parameter("4th Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Retracement")]
         public LineStyle FourthFibonacciRetracementStyle { get; set; }
+
+        [Parameter("4th Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Retracement")]
+        public bool FourthFibonacciRetracementExtendToInfinity { get; set; }
 
         [Parameter("Show 5th Level", DefaultValue = true, Group = "Fibonacci Retracement")]
         public bool ShowFifthFibonacciRetracement { get; set; }
@@ -209,6 +221,9 @@ namespace cAlgo
         [Parameter("5th Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Retracement")]
         public LineStyle FifthFibonacciRetracementStyle { get; set; }
 
+        [Parameter("5th Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Retracement")]
+        public bool FifthFibonacciRetracementExtendToInfinity { get; set; }
+
         [Parameter("Show 6th Level", DefaultValue = true, Group = "Fibonacci Retracement")]
         public bool ShowSixthFibonacciRetracement { get; set; }
 
@@ -229,6 +244,9 @@ namespace cAlgo
 
         [Parameter("6th Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Retracement")]
         public LineStyle SixthFibonacciRetracementStyle { get; set; }
+
+        [Parameter("6th Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Retracement")]
+        public bool SixthFibonacciRetracementExtendToInfinity { get; set; }
 
         [Parameter("Show 7th Level", DefaultValue = true, Group = "Fibonacci Retracement")]
         public bool ShowSeventhFibonacciRetracement { get; set; }
@@ -251,6 +269,9 @@ namespace cAlgo
         [Parameter("7th Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Retracement")]
         public LineStyle SeventhFibonacciRetracementStyle { get; set; }
 
+        [Parameter("7th Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Retracement")]
+        public bool SeventhFibonacciRetracementExtendToInfinity { get; set; }
+
         [Parameter("Show 8th Level", DefaultValue = true, Group = "Fibonacci Retracement")]
         public bool ShowEighthFibonacciRetracement { get; set; }
 
@@ -271,6 +292,9 @@ namespace cAlgo
 
         [Parameter("8th Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Retracement")]
         public LineStyle EighthFibonacciRetracementStyle { get; set; }
+
+        [Parameter("8th Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Retracement")]
+        public bool EighthFibonacciRetracementExtendToInfinity { get; set; }
 
         [Parameter("Show 9th Level", DefaultValue = true, Group = "Fibonacci Retracement")]
         public bool ShowNinthFibonacciRetracement { get; set; }
@@ -293,6 +317,9 @@ namespace cAlgo
         [Parameter("9th Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Retracement")]
         public LineStyle NinthFibonacciRetracementStyle { get; set; }
 
+        [Parameter("9th Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Retracement")]
+        public bool NinthFibonacciRetracementExtendToInfinity { get; set; }
+
         [Parameter("Show 10th Level", DefaultValue = true, Group = "Fibonacci Retracement")]
         public bool ShowTenthFibonacciRetracement { get; set; }
 
@@ -314,6 +341,9 @@ namespace cAlgo
         [Parameter("10th Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Retracement")]
         public LineStyle TenthFibonacciRetracementStyle { get; set; }
 
+        [Parameter("10th Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Retracement")]
+        public bool TenthFibonacciRetracementExtendToInfinity { get; set; }
+
         [Parameter("Show 11th Level", DefaultValue = true, Group = "Fibonacci Retracement")]
         public bool ShowEleventhFibonacciRetracement { get; set; }
 
@@ -334,6 +364,9 @@ namespace cAlgo
 
         [Parameter("11th Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Retracement")]
         public LineStyle EleventhFibonacciRetracementStyle { get; set; }
+
+        [Parameter("11th Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Retracement")]
+        public bool EleventhFibonacciRetracementExtendToInfinity { get; set; }
 
         #endregion Fibonacci Retracement parameters
 
@@ -1362,24 +1395,6 @@ namespace cAlgo
             pattern.Initialize();
         }
 
-        private PatternGroupButton AddPatternGroupButton(string text)
-        {
-            var groupButton = new PatternGroupButton(_groupButtonsPanel)
-            {
-                Text = text,
-                Style = _buttonsStyle,
-                OnColor = _buttonsBackgroundEnableColor,
-                OffColor = _buttonsBackgroundDisableColor,
-                IsVisible = false
-            };
-
-            _buttons.Add(groupButton);
-
-            _mainButtonsPanel.AddChild(groupButton);
-
-            return groupButton;
-        }
-
         private void CheckTimeFrameVisibility()
         {
             if (IsTimeFrameVisibilityEnabled)
@@ -1411,6 +1426,7 @@ namespace cAlgo
                     Thickness = FirstFibonacciRetracementThickness,
                     FillColor = ColorParser.Parse(FirstFibonacciRetracementColor, FirstFibonacciRetracementAlpha),
                     IsFilled = FillFirstFibonacciRetracement,
+                    ExtendToInfinity = FirstFibonacciRetracementExtendToInfinity,
                 });
             }
 
@@ -1424,6 +1440,7 @@ namespace cAlgo
                     Thickness = SecondFibonacciRetracementThickness,
                     FillColor = ColorParser.Parse(SecondFibonacciRetracementColor, SecondFibonacciRetracementAlpha),
                     IsFilled = FillSecondFibonacciRetracement,
+                    ExtendToInfinity = SecondFibonacciRetracementExtendToInfinity,
                 });
             }
 
@@ -1437,6 +1454,7 @@ namespace cAlgo
                     Thickness = ThirdFibonacciRetracementThickness,
                     FillColor = ColorParser.Parse(ThirdFibonacciRetracementColor, ThirdFibonacciRetracementAlpha),
                     IsFilled = FillThirdFibonacciRetracement,
+                    ExtendToInfinity = ThirdFibonacciRetracementExtendToInfinity,
                 });
             }
 
@@ -1450,6 +1468,7 @@ namespace cAlgo
                     Thickness = FourthFibonacciRetracementThickness,
                     FillColor = ColorParser.Parse(FourthFibonacciRetracementColor, FourthFibonacciRetracementAlpha),
                     IsFilled = FillFourthFibonacciRetracement,
+                    ExtendToInfinity = FourthFibonacciRetracementExtendToInfinity,
                 });
             }
 
@@ -1463,6 +1482,7 @@ namespace cAlgo
                     Thickness = FifthFibonacciRetracementThickness,
                     FillColor = ColorParser.Parse(FifthFibonacciRetracementColor, FifthFibonacciRetracementAlpha),
                     IsFilled = FillFifthFibonacciRetracement,
+                    ExtendToInfinity = FifthFibonacciRetracementExtendToInfinity,
                 });
             }
 
@@ -1476,6 +1496,7 @@ namespace cAlgo
                     Thickness = SixthFibonacciRetracementThickness,
                     FillColor = ColorParser.Parse(SixthFibonacciRetracementColor, SixthFibonacciRetracementAlpha),
                     IsFilled = FillSixthFibonacciRetracement,
+                    ExtendToInfinity = SixthFibonacciRetracementExtendToInfinity,
                 });
             }
 
@@ -1489,6 +1510,7 @@ namespace cAlgo
                     Thickness = SeventhFibonacciRetracementThickness,
                     FillColor = ColorParser.Parse(SeventhFibonacciRetracementColor, SeventhFibonacciRetracementAlpha),
                     IsFilled = FillSeventhFibonacciRetracement,
+                    ExtendToInfinity = SeventhFibonacciRetracementExtendToInfinity,
                 });
             }
 
@@ -1502,6 +1524,7 @@ namespace cAlgo
                     Thickness = EighthFibonacciRetracementThickness,
                     FillColor = ColorParser.Parse(EighthFibonacciRetracementColor, EighthFibonacciRetracementAlpha),
                     IsFilled = FillEighthFibonacciRetracement,
+                    ExtendToInfinity = EighthFibonacciRetracementExtendToInfinity,
                 });
             }
 
@@ -1515,6 +1538,7 @@ namespace cAlgo
                     Thickness = NinthFibonacciRetracementThickness,
                     FillColor = ColorParser.Parse(NinthFibonacciRetracementColor, NinthFibonacciRetracementAlpha),
                     IsFilled = FillNinthFibonacciRetracement,
+                    ExtendToInfinity = NinthFibonacciRetracementExtendToInfinity,
                 });
             }
 
@@ -1528,6 +1552,7 @@ namespace cAlgo
                     Thickness = TenthFibonacciRetracementThickness,
                     FillColor = ColorParser.Parse(TenthFibonacciRetracementColor, TenthFibonacciRetracementAlpha),
                     IsFilled = FillTenthFibonacciRetracement,
+                    ExtendToInfinity = TenthFibonacciRetracementExtendToInfinity,
                 });
             }
 
@@ -1541,6 +1566,7 @@ namespace cAlgo
                     Thickness = EleventhFibonacciRetracementThickness,
                     FillColor = ColorParser.Parse(EleventhFibonacciRetracementColor, EleventhFibonacciRetracementAlpha),
                     IsFilled = FillEleventhFibonacciRetracement,
+                    ExtendToInfinity = EleventhFibonacciRetracementExtendToInfinity,
                 });
             }
 

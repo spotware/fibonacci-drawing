@@ -106,7 +106,8 @@ namespace cAlgo.Patterns
                 if (!levelRectangles.TryGetValue(previousLevel.Percent, out previousLevelRectangle)) continue;
 
                 previousLevelRectangle.Time1 = startTime;
-                previousLevelRectangle.Time2 = endTime;
+
+                previousLevelRectangle.Time2 = previousLevel.ExtendToInfinity ? endTime.AddMonths(100) : endTime;
 
                 previousLevelRectangle.Y1 = previousLevelPrice;
                 previousLevelRectangle.Y2 = price;
@@ -177,6 +178,7 @@ namespace cAlgo.Patterns
 
                 levelLine.IsInteractive = true;
                 levelLine.IsLocked = true;
+                levelLine.ExtendToInfinity = level.ExtendToInfinity;
 
                 _levelLines[level.Percent] = levelLine;
 
@@ -197,6 +199,11 @@ namespace cAlgo.Patterns
 
                 rectangle.IsInteractive = true;
                 rectangle.IsLocked = true;
+
+                if (level.ExtendToInfinity)
+                {
+                    rectangle.Time2 = rectangle.Time2.AddMonths(100);
+                }
 
                 previousLevelPrice = price;
                 previousLevel = level;

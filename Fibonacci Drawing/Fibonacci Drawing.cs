@@ -370,6 +370,274 @@ namespace cAlgo
 
         #endregion Fibonacci Retracement parameters
 
+        #region Fibonacci Expansion parameters
+
+        [Parameter("Show 1st Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool ShowFirstFibonacciExpansion { get; set; }
+
+        [Parameter("Fill 1st Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool FillFirstFibonacciExpansion { get; set; }
+
+        [Parameter("1st Level Percent", DefaultValue = 0, Group = "Fibonacci Expansion")]
+        public double FirstFibonacciExpansionPercent { get; set; }
+
+        [Parameter("1st Level Color", DefaultValue = "Gray", Group = "Fibonacci Expansion")]
+        public string FirstFibonacciExpansionColor { get; set; }
+
+        [Parameter("1st Level Alpha", DefaultValue = 50, MinValue = 0, MaxValue = 255, Group = "Fibonacci Expansion")]
+        public int FirstFibonacciExpansionAlpha { get; set; }
+
+        [Parameter("1st Level Thickness", DefaultValue = 1, MinValue = 0, Group = "Fibonacci Expansion")]
+        public int FirstFibonacciExpansionThickness { get; set; }
+
+        [Parameter("1st Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Expansion")]
+        public LineStyle FirstFibonacciExpansionStyle { get; set; }
+
+        [Parameter("1st Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Expansion")]
+        public bool FirstFibonacciExpansionExtendToInfinity { get; set; }
+
+        [Parameter("Show 2nd Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool ShowSecondFibonacciExpansion { get; set; }
+
+        [Parameter("Fill 2nd Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool FillSecondFibonacciExpansion { get; set; }
+
+        [Parameter("2nd Level Percent", DefaultValue = 0.236, Group = "Fibonacci Expansion")]
+        public double SecondFibonacciExpansionPercent { get; set; }
+
+        [Parameter("2nd Level Color", DefaultValue = "Red", Group = "Fibonacci Expansion")]
+        public string SecondFibonacciExpansionColor { get; set; }
+
+        [Parameter("2nd Level Alpha", DefaultValue = 50, MinValue = 0, MaxValue = 255, Group = "Fibonacci Expansion")]
+        public int SecondFibonacciExpansionAlpha { get; set; }
+
+        [Parameter("2nd Level Thickness", DefaultValue = 1, MinValue = 0, Group = "Fibonacci Expansion")]
+        public int SecondFibonacciExpansionThickness { get; set; }
+
+        [Parameter("2nd Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Expansion")]
+        public LineStyle SecondFibonacciExpansionStyle { get; set; }
+
+        [Parameter("2nd Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Expansion")]
+        public bool SecondFibonacciExpansionExtendToInfinity { get; set; }
+
+        [Parameter("Show 3rd Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool ShowThirdFibonacciExpansion { get; set; }
+
+        [Parameter("Fill 3rd Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool FillThirdFibonacciExpansion { get; set; }
+
+        [Parameter("3rd Level Percent", DefaultValue = 0.382, Group = "Fibonacci Expansion")]
+        public double ThirdFibonacciExpansionPercent { get; set; }
+
+        [Parameter("3rd Level Color", DefaultValue = "GreenYellow", Group = "Fibonacci Expansion")]
+        public string ThirdFibonacciExpansionColor { get; set; }
+
+        [Parameter("3rd Level Alpha", DefaultValue = 50, MinValue = 0, MaxValue = 255, Group = "Fibonacci Expansion")]
+        public int ThirdFibonacciExpansionAlpha { get; set; }
+
+        [Parameter("3rd Level Thickness", DefaultValue = 1, MinValue = 0, Group = "Fibonacci Expansion")]
+        public int ThirdFibonacciExpansionThickness { get; set; }
+
+        [Parameter("3rd Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Expansion")]
+        public LineStyle ThirdFibonacciExpansionStyle { get; set; }
+
+        [Parameter("3rd Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Expansion")]
+        public bool ThirdFibonacciExpansionExtendToInfinity { get; set; }
+
+        [Parameter("Show 4th Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool ShowFourthFibonacciExpansion { get; set; }
+
+        [Parameter("Fill 4th Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool FillFourthFibonacciExpansion { get; set; }
+
+        [Parameter("4th Level Percent", DefaultValue = 0.5, Group = "Fibonacci Expansion")]
+        public double FourthFibonacciExpansionPercent { get; set; }
+
+        [Parameter("4th Level Color", DefaultValue = "DarkGreen", Group = "Fibonacci Expansion")]
+        public string FourthFibonacciExpansionColor { get; set; }
+
+        [Parameter("4th Level Alpha", DefaultValue = 50, MinValue = 0, MaxValue = 255, Group = "Fibonacci Expansion")]
+        public int FourthFibonacciExpansionAlpha { get; set; }
+
+        [Parameter("4th Level Thickness", DefaultValue = 1, MinValue = 0, Group = "Fibonacci Expansion")]
+        public int FourthFibonacciExpansionThickness { get; set; }
+
+        [Parameter("4th Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Expansion")]
+        public LineStyle FourthFibonacciExpansionStyle { get; set; }
+
+        [Parameter("4th Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Expansion")]
+        public bool FourthFibonacciExpansionExtendToInfinity { get; set; }
+
+        [Parameter("Show 5th Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool ShowFifthFibonacciExpansion { get; set; }
+
+        [Parameter("Fill 5th Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool FillFifthFibonacciExpansion { get; set; }
+
+        [Parameter("5th Level Percent", DefaultValue = 0.618, Group = "Fibonacci Expansion")]
+        public double FifthFibonacciExpansionPercent { get; set; }
+
+        [Parameter("5th Level Color", DefaultValue = "BlueViolet", Group = "Fibonacci Expansion")]
+        public string FifthFibonacciExpansionColor { get; set; }
+
+        [Parameter("5th Level Alpha", DefaultValue = 50, MinValue = 0, MaxValue = 255, Group = "Fibonacci Expansion")]
+        public int FifthFibonacciExpansionAlpha { get; set; }
+
+        [Parameter("5th Level Thickness", DefaultValue = 1, MinValue = 0, Group = "Fibonacci Expansion")]
+        public int FifthFibonacciExpansionThickness { get; set; }
+
+        [Parameter("5th Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Expansion")]
+        public LineStyle FifthFibonacciExpansionStyle { get; set; }
+
+        [Parameter("5th Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Expansion")]
+        public bool FifthFibonacciExpansionExtendToInfinity { get; set; }
+
+        [Parameter("Show 6th Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool ShowSixthFibonacciExpansion { get; set; }
+
+        [Parameter("Fill 6th Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool FillSixthFibonacciExpansion { get; set; }
+
+        [Parameter("6th Level Percent", DefaultValue = 0.786, Group = "Fibonacci Expansion")]
+        public double SixthFibonacciExpansionPercent { get; set; }
+
+        [Parameter("6th Level Color", DefaultValue = "AliceBlue", Group = "Fibonacci Expansion")]
+        public string SixthFibonacciExpansionColor { get; set; }
+
+        [Parameter("6th Level Alpha", DefaultValue = 50, MinValue = 0, MaxValue = 255, Group = "Fibonacci Expansion")]
+        public int SixthFibonacciExpansionAlpha { get; set; }
+
+        [Parameter("6th Level Thickness", DefaultValue = 1, MinValue = 0, Group = "Fibonacci Expansion")]
+        public int SixthFibonacciExpansionThickness { get; set; }
+
+        [Parameter("6th Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Expansion")]
+        public LineStyle SixthFibonacciExpansionStyle { get; set; }
+
+        [Parameter("6th Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Expansion")]
+        public bool SixthFibonacciExpansionExtendToInfinity { get; set; }
+
+        [Parameter("Show 7th Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool ShowSeventhFibonacciExpansion { get; set; }
+
+        [Parameter("Fill 7th Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool FillSeventhFibonacciExpansion { get; set; }
+
+        [Parameter("7th Level Percent", DefaultValue = 1, Group = "Fibonacci Expansion")]
+        public double SeventhFibonacciExpansionPercent { get; set; }
+
+        [Parameter("7th Level Color", DefaultValue = "Bisque", Group = "Fibonacci Expansion")]
+        public string SeventhFibonacciExpansionColor { get; set; }
+
+        [Parameter("7th Level Alpha", DefaultValue = 50, MinValue = 0, MaxValue = 255, Group = "Fibonacci Expansion")]
+        public int SeventhFibonacciExpansionAlpha { get; set; }
+
+        [Parameter("7th Level Thickness", DefaultValue = 1, MinValue = 0, Group = "Fibonacci Expansion")]
+        public int SeventhFibonacciExpansionThickness { get; set; }
+
+        [Parameter("7th Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Expansion")]
+        public LineStyle SeventhFibonacciExpansionStyle { get; set; }
+
+        [Parameter("7th Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Expansion")]
+        public bool SeventhFibonacciExpansionExtendToInfinity { get; set; }
+
+        [Parameter("Show 8th Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool ShowEighthFibonacciExpansion { get; set; }
+
+        [Parameter("Fill 8th Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool FillEighthFibonacciExpansion { get; set; }
+
+        [Parameter("8th Level Percent", DefaultValue = 1.618, Group = "Fibonacci Expansion")]
+        public double EighthFibonacciExpansionPercent { get; set; }
+
+        [Parameter("8th Level Color", DefaultValue = "Azure", Group = "Fibonacci Expansion")]
+        public string EighthFibonacciExpansionColor { get; set; }
+
+        [Parameter("8th Level Alpha", DefaultValue = 50, MinValue = 0, MaxValue = 255, Group = "Fibonacci Expansion")]
+        public int EighthFibonacciExpansionAlpha { get; set; }
+
+        [Parameter("8th Level Thickness", DefaultValue = 1, MinValue = 0, Group = "Fibonacci Expansion")]
+        public int EighthFibonacciExpansionThickness { get; set; }
+
+        [Parameter("8th Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Expansion")]
+        public LineStyle EighthFibonacciExpansionStyle { get; set; }
+
+        [Parameter("8th Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Expansion")]
+        public bool EighthFibonacciExpansionExtendToInfinity { get; set; }
+
+        [Parameter("Show 9th Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool ShowNinthFibonacciExpansion { get; set; }
+
+        [Parameter("Fill 9th Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool FillNinthFibonacciExpansion { get; set; }
+
+        [Parameter("9th Level Percent", DefaultValue = 2.618, Group = "Fibonacci Expansion")]
+        public double NinthFibonacciExpansionPercent { get; set; }
+
+        [Parameter("9th Level Color", DefaultValue = "Aqua", Group = "Fibonacci Expansion")]
+        public string NinthFibonacciExpansionColor { get; set; }
+
+        [Parameter("9th Level Alpha", DefaultValue = 50, MinValue = 0, MaxValue = 255, Group = "Fibonacci Expansion")]
+        public int NinthFibonacciExpansionAlpha { get; set; }
+
+        [Parameter("9th Level Thickness", DefaultValue = 1, MinValue = 0, Group = "Fibonacci Expansion")]
+        public int NinthFibonacciExpansionThickness { get; set; }
+
+        [Parameter("9th Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Expansion")]
+        public LineStyle NinthFibonacciExpansionStyle { get; set; }
+
+        [Parameter("9th Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Expansion")]
+        public bool NinthFibonacciExpansionExtendToInfinity { get; set; }
+
+        [Parameter("Show 10th Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool ShowTenthFibonacciExpansion { get; set; }
+
+        [Parameter("Fill 10th Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool FillTenthFibonacciExpansion { get; set; }
+
+        [Parameter("10th Level Percent", DefaultValue = 3.618, Group = "Fibonacci Expansion")]
+        public double TenthFibonacciExpansionPercent { get; set; }
+
+        [Parameter("10th Level Color", DefaultValue = "Aquamarine", Group = "Fibonacci Expansion")]
+        public string TenthFibonacciExpansionColor { get; set; }
+
+        [Parameter("10th Level Alpha", DefaultValue = 50, MinValue = 0, MaxValue = 255, Group = "Fibonacci Expansion")]
+        public int TenthFibonacciExpansionAlpha { get; set; }
+
+        [Parameter("10th Level Thickness", DefaultValue = 1, MinValue = 0, Group = "Fibonacci Expansion")]
+        public int TenthFibonacciExpansionThickness { get; set; }
+
+        [Parameter("10th Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Expansion")]
+        public LineStyle TenthFibonacciExpansionStyle { get; set; }
+
+        [Parameter("10th Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Expansion")]
+        public bool TenthFibonacciExpansionExtendToInfinity { get; set; }
+
+        [Parameter("Show 11th Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool ShowEleventhFibonacciExpansion { get; set; }
+
+        [Parameter("Fill 11th Level", DefaultValue = true, Group = "Fibonacci Expansion")]
+        public bool FillEleventhFibonacciExpansion { get; set; }
+
+        [Parameter("11th Level Percent", DefaultValue = 4.236, Group = "Fibonacci Expansion")]
+        public double EleventhFibonacciExpansionPercent { get; set; }
+
+        [Parameter("11th Level Color", DefaultValue = "Chocolate", Group = "Fibonacci Expansion")]
+        public string EleventhFibonacciExpansionColor { get; set; }
+
+        [Parameter("11th Level Alpha", DefaultValue = 50, MinValue = 0, MaxValue = 255, Group = "Fibonacci Expansion")]
+        public int EleventhFibonacciExpansionAlpha { get; set; }
+
+        [Parameter("11th Level Thickness", DefaultValue = 1, MinValue = 0, Group = "Fibonacci Expansion")]
+        public int EleventhFibonacciExpansionThickness { get; set; }
+
+        [Parameter("11th Level Style", DefaultValue = LineStyle.Solid, Group = "Fibonacci Expansion")]
+        public LineStyle EleventhFibonacciExpansionStyle { get; set; }
+
+        [Parameter("11th Level Extend To Infinity", DefaultValue = false, Group = "Fibonacci Expansion")]
+        public bool EleventhFibonacciExpansionExtendToInfinity { get; set; }
+
+        #endregion Fibonacci Expansion parameters
+
         #region Fibonacci Speed Resistance Fan parameters
 
         [Parameter("Rectangle Thickness", DefaultValue = 1, MinValue = 1, Group = "Fibonacci Speed Resistance Fan")]
@@ -1175,6 +1443,7 @@ namespace cAlgo
             _mainButtonsPanel.AddChild(_expandButton);
 
             AddPatternButton(new FibonacciRetracementPattern(patternConfig, GetFibonacciRetracementLevels()));
+            AddPatternButton(new FibonacciExpansionPattern(patternConfig, GetFibonacciExpansionLevels()));
             AddPatternButton(new FibonacciSpeedResistanceFanPattern(patternConfig, new FibonacciSpeedResistanceFanSettings
             {
                 RectangleThickness = FibonacciSpeedResistanceFanRectangleThickness,
@@ -1571,6 +1840,167 @@ namespace cAlgo
             }
 
             return fibonacciRetracementLevels;
+        }
+
+        private IEnumerable<Patterns.FibonacciLevel> GetFibonacciExpansionLevels()
+        {
+            var fibonacciExpansionLevels = new List<Patterns.FibonacciLevel>();
+
+            if (ShowFirstFibonacciExpansion)
+            {
+                fibonacciExpansionLevels.Add(new Patterns.FibonacciLevel
+                {
+                    Percent = FirstFibonacciExpansionPercent,
+                    LineColor = ColorParser.Parse(FirstFibonacciExpansionColor),
+                    Style = FirstFibonacciExpansionStyle,
+                    Thickness = FirstFibonacciExpansionThickness,
+                    FillColor = ColorParser.Parse(FirstFibonacciExpansionColor, FirstFibonacciExpansionAlpha),
+                    IsFilled = FillFirstFibonacciExpansion,
+                    ExtendToInfinity = FirstFibonacciExpansionExtendToInfinity,
+                });
+            }
+
+            if (ShowSecondFibonacciExpansion)
+            {
+                fibonacciExpansionLevels.Add(new Patterns.FibonacciLevel
+                {
+                    Percent = SecondFibonacciExpansionPercent,
+                    LineColor = ColorParser.Parse(SecondFibonacciExpansionColor),
+                    Style = SecondFibonacciExpansionStyle,
+                    Thickness = SecondFibonacciExpansionThickness,
+                    FillColor = ColorParser.Parse(SecondFibonacciExpansionColor, SecondFibonacciExpansionAlpha),
+                    IsFilled = FillSecondFibonacciExpansion,
+                    ExtendToInfinity = SecondFibonacciExpansionExtendToInfinity,
+                });
+            }
+
+            if (ShowThirdFibonacciExpansion)
+            {
+                fibonacciExpansionLevels.Add(new Patterns.FibonacciLevel
+                {
+                    Percent = ThirdFibonacciExpansionPercent,
+                    LineColor = ColorParser.Parse(ThirdFibonacciExpansionColor),
+                    Style = ThirdFibonacciExpansionStyle,
+                    Thickness = ThirdFibonacciExpansionThickness,
+                    FillColor = ColorParser.Parse(ThirdFibonacciExpansionColor, ThirdFibonacciExpansionAlpha),
+                    IsFilled = FillThirdFibonacciExpansion,
+                    ExtendToInfinity = ThirdFibonacciExpansionExtendToInfinity,
+                });
+            }
+
+            if (ShowFourthFibonacciExpansion)
+            {
+                fibonacciExpansionLevels.Add(new Patterns.FibonacciLevel
+                {
+                    Percent = FourthFibonacciExpansionPercent,
+                    LineColor = ColorParser.Parse(FourthFibonacciExpansionColor),
+                    Style = FourthFibonacciExpansionStyle,
+                    Thickness = FourthFibonacciExpansionThickness,
+                    FillColor = ColorParser.Parse(FourthFibonacciExpansionColor, FourthFibonacciExpansionAlpha),
+                    IsFilled = FillFourthFibonacciExpansion,
+                    ExtendToInfinity = FourthFibonacciExpansionExtendToInfinity,
+                });
+            }
+
+            if (ShowFifthFibonacciExpansion)
+            {
+                fibonacciExpansionLevels.Add(new Patterns.FibonacciLevel
+                {
+                    Percent = FifthFibonacciExpansionPercent,
+                    LineColor = ColorParser.Parse(FifthFibonacciExpansionColor),
+                    Style = FifthFibonacciExpansionStyle,
+                    Thickness = FifthFibonacciExpansionThickness,
+                    FillColor = ColorParser.Parse(FifthFibonacciExpansionColor, FifthFibonacciExpansionAlpha),
+                    IsFilled = FillFifthFibonacciExpansion,
+                    ExtendToInfinity = FifthFibonacciExpansionExtendToInfinity,
+                });
+            }
+
+            if (ShowSixthFibonacciExpansion)
+            {
+                fibonacciExpansionLevels.Add(new Patterns.FibonacciLevel
+                {
+                    Percent = SixthFibonacciExpansionPercent,
+                    LineColor = ColorParser.Parse(SixthFibonacciExpansionColor),
+                    Style = SixthFibonacciExpansionStyle,
+                    Thickness = SixthFibonacciExpansionThickness,
+                    FillColor = ColorParser.Parse(SixthFibonacciExpansionColor, SixthFibonacciExpansionAlpha),
+                    IsFilled = FillSixthFibonacciExpansion,
+                    ExtendToInfinity = SixthFibonacciExpansionExtendToInfinity,
+                });
+            }
+
+            if (ShowSeventhFibonacciExpansion)
+            {
+                fibonacciExpansionLevels.Add(new Patterns.FibonacciLevel
+                {
+                    Percent = SeventhFibonacciExpansionPercent,
+                    LineColor = ColorParser.Parse(SeventhFibonacciExpansionColor),
+                    Style = SeventhFibonacciExpansionStyle,
+                    Thickness = SeventhFibonacciExpansionThickness,
+                    FillColor = ColorParser.Parse(SeventhFibonacciExpansionColor, SeventhFibonacciExpansionAlpha),
+                    IsFilled = FillSeventhFibonacciExpansion,
+                    ExtendToInfinity = SeventhFibonacciExpansionExtendToInfinity,
+                });
+            }
+
+            if (ShowEighthFibonacciExpansion)
+            {
+                fibonacciExpansionLevels.Add(new Patterns.FibonacciLevel
+                {
+                    Percent = EighthFibonacciExpansionPercent,
+                    LineColor = ColorParser.Parse(EighthFibonacciExpansionColor),
+                    Style = EighthFibonacciExpansionStyle,
+                    Thickness = EighthFibonacciExpansionThickness,
+                    FillColor = ColorParser.Parse(EighthFibonacciExpansionColor, EighthFibonacciExpansionAlpha),
+                    IsFilled = FillEighthFibonacciExpansion,
+                    ExtendToInfinity = EighthFibonacciExpansionExtendToInfinity,
+                });
+            }
+
+            if (ShowNinthFibonacciExpansion)
+            {
+                fibonacciExpansionLevels.Add(new Patterns.FibonacciLevel
+                {
+                    Percent = NinthFibonacciExpansionPercent,
+                    LineColor = ColorParser.Parse(NinthFibonacciExpansionColor),
+                    Style = NinthFibonacciExpansionStyle,
+                    Thickness = NinthFibonacciExpansionThickness,
+                    FillColor = ColorParser.Parse(NinthFibonacciExpansionColor, NinthFibonacciExpansionAlpha),
+                    IsFilled = FillNinthFibonacciExpansion,
+                    ExtendToInfinity = NinthFibonacciExpansionExtendToInfinity,
+                });
+            }
+
+            if (ShowTenthFibonacciExpansion)
+            {
+                fibonacciExpansionLevels.Add(new Patterns.FibonacciLevel
+                {
+                    Percent = TenthFibonacciExpansionPercent,
+                    LineColor = ColorParser.Parse(TenthFibonacciExpansionColor),
+                    Style = TenthFibonacciExpansionStyle,
+                    Thickness = TenthFibonacciExpansionThickness,
+                    FillColor = ColorParser.Parse(TenthFibonacciExpansionColor, TenthFibonacciExpansionAlpha),
+                    IsFilled = FillTenthFibonacciExpansion,
+                    ExtendToInfinity = TenthFibonacciExpansionExtendToInfinity,
+                });
+            }
+
+            if (ShowEleventhFibonacciExpansion)
+            {
+                fibonacciExpansionLevels.Add(new Patterns.FibonacciLevel
+                {
+                    Percent = EleventhFibonacciExpansionPercent,
+                    LineColor = ColorParser.Parse(EleventhFibonacciExpansionColor),
+                    Style = EleventhFibonacciExpansionStyle,
+                    Thickness = EleventhFibonacciExpansionThickness,
+                    FillColor = ColorParser.Parse(EleventhFibonacciExpansionColor, EleventhFibonacciExpansionAlpha),
+                    IsFilled = FillEleventhFibonacciExpansion,
+                    ExtendToInfinity = EleventhFibonacciExpansionExtendToInfinity,
+                });
+            }
+
+            return fibonacciExpansionLevels;
         }
 
         private IEnumerable<Patterns.FibonacciLevel> GetFibonacciTimeZoneLevels()

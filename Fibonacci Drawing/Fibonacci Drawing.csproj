@@ -78,6 +78,7 @@
     <Compile Include="Helpers\SymbolTradingSessionExtensions.cs" />
     <Compile Include="Fibonacci Drawing.cs" />
     <Compile Include="Patterns\FibonacciChannelPattern.cs" />
+    <Compile Include="Patterns\FibonacciExpansionPattern.cs" />
     <Compile Include="Patterns\LineSettings.cs" />
     <Compile Include="Patterns\PercentLineSettings.cs" />
     <Compile Include="Patterns\TrendBasedFibonacciTimePattern.cs" />

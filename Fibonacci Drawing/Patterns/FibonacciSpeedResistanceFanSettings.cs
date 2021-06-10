@@ -31,5 +31,9 @@ namespace cAlgo.Patterns
         public SideFanSettings[] SideFanSettings { get; set; }
 
         public FanSettings MainFanSettings { get; set; }
+
+        public bool ShowPriceLevels { get; set; }
+
+        public bool ShowTimeLevels { get; set; }
     }
 }

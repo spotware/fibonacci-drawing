@@ -96,108 +96,20 @@ namespace cAlgo.Patterns
                 _rectangle.Time2 = obj.TimeValue;
                 _rectangle.Y2 = obj.YValue;
 
-                DrawOrUpdateHorizontalLines(MainFanLine, _horizontalTrendLines);
+                if (_settings.ShowPriceLevels)
+                {
+                    DrawOrUpdateHorizontalLines(MainFanLine, _horizontalTrendLines);
+                }
 
-                DrawOrUpdateVerticalLines(MainFanLine, _verticalTrendLines);
+                if (_settings.ShowTimeLevels)
+                {
+                    DrawOrUpdateVerticalLines(MainFanLine, _verticalTrendLines);
+                }
 
                 DrawOrUpdateExtendedSideLines(MainFanLine, ref _extendedHorizontalLine, ref _extendedVerticalLine);
             }
 
             base.OnMouseMove(obj);
-        }
-
-        protected override void UpdateSideFans(ChartTrendLine mainFan, Dictionary<double, ChartTrendLine> sideFans)
-        {
-            var startBarIndex = mainFan.GetStartBarIndex(Chart.Bars, Chart.Symbol);
-            var endBarIndex = mainFan.GetEndBarIndex(Chart.Bars, Chart.Symbol);
-
-            var barsNumber = mainFan.GetBarsNumber(Chart.Bars, Chart.Symbol);
-
-            var mainFanPriceDelta = Math.Abs(mainFan.Y2 - mainFan.Y1);
-
-            for (var iFan = 0; iFan < SideFanSettings.Length; iFan++)
-            {
-                var fanSettings = SideFanSettings[iFan];
-
-                double y2;
-                DateTime time2;
-
-                if (fanSettings.Percent < 0)
-                {
-                    var yAmount = mainFanPriceDelta * Math.Abs(fanSettings.Percent);
-
-                    y2 = mainFan.Y2 > mainFan.Y1 ? mainFan.Y2 - yAmount : mainFan.Y2 + yAmount;
-
-                    time2 = mainFan.Time2;
-                }
-                else
-                {
-                    y2 = mainFan.Y2;
-
-                    var barsPercent = barsNumber * fanSettings.Percent;
-
-                    var barIndex = mainFan.Time2 > mainFan.Time1 ? endBarIndex - barsPercent : startBarIndex + barsPercent;
-
-                    time2 = Chart.Bars.GetOpenTime(barIndex, Chart.Symbol);
-                }
-
-                ChartTrendLine fanLine;
-
-                if (!sideFans.TryGetValue(fanSettings.Percent, out fanLine)) continue;
-
-                fanLine.Time1 = mainFan.Time1;
-                fanLine.Time2 = time2;
-
-                fanLine.Y1 = mainFan.Y1;
-                fanLine.Y2 = y2;
-            }
-        }
-
-        protected override void DrawSideFans(ChartTrendLine mainFan)
-        {
-            var startBarIndex = mainFan.GetStartBarIndex(Chart.Bars, Chart.Symbol);
-            var endBarIndex = mainFan.GetEndBarIndex(Chart.Bars, Chart.Symbol);
-
-            var barsNumber = mainFan.GetBarsNumber(Chart.Bars, Chart.Symbol);
-
-            var mainFanPriceDelta = Math.Abs(mainFan.Y2 - mainFan.Y1);
-
-            for (var iFan = 0; iFan < SideFanSettings.Length; iFan++)
-            {
-                var fanSettings = SideFanSettings[iFan];
-
-                double y2;
-                DateTime time2;
-
-                if (fanSettings.Percent < 0)
-                {
-                    var yAmount = mainFanPriceDelta * Math.Abs(fanSettings.Percent);
-
-                    y2 = mainFan.Y2 > mainFan.Y1 ? mainFan.Y2 - yAmount : mainFan.Y2 + yAmount;
-
-                    time2 = mainFan.Time2;
-                }
-                else
-                {
-                    y2 = mainFan.Y2;
-
-                    var barsPercent = barsNumber * fanSettings.Percent;
-
-                    var barIndex = mainFan.Time2 > mainFan.Time1 ? endBarIndex - barsPercent : startBarIndex + barsPercent;
-
-                    time2 = Chart.Bars.GetOpenTime(barIndex, Chart.Symbol);
-                }
-
-                var objectName = GetObjectName(string.Format("SideFan_{0}", fanSettings.Percent));
-
-                var trendLine = Chart.DrawTrendLine(objectName, mainFan.Time1, mainFan.Y1, time2, y2, fanSettings.Color, fanSettings.Thickness, fanSettings.Style);
-
-                trendLine.IsInteractive = true;
-                trendLine.IsLocked = true;
-                trendLine.ExtendToInfinity = true;
-
-                SideFanLines[fanSettings.Percent] = trendLine;
-            }
         }
 
         private void DrawOrUpdateHorizontalLines(ChartTrendLine mainFan, Dictionary<double, ChartTrendLine> horizontalLines)
@@ -229,7 +141,7 @@ namespace cAlgo.Patterns
                     line.Y1 = level;
                     line.Y2 = level;
                 }
-                else
+                else if (_settings.ShowPriceLevels)
                 {
                     var objectName = GetObjectName(string.Format("HorizontalLine_{0}", absolutePercent.ToString(CultureInfo.InvariantCulture)));
 
@@ -279,7 +191,7 @@ namespace cAlgo.Patterns
                     line.Y1 = mainFan.Y1;
                     line.Y2 = mainFan.Y2;
                 }
-                else
+                else if (_settings.ShowTimeLevels)
                 {
                     var objectName = GetObjectName(string.Format("VerticalLine_{0}", fanSettings.Percent.ToString(CultureInfo.InvariantCulture)));
 
